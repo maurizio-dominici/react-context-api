@@ -1,24 +1,27 @@
-import { createContext, useContext, useState } from "react";
+import axios from "axios";
+import { createContext, useContext, useEffect, useState } from "react";
 
 const PostsContext = createContext();
 
 function PostsProvider({ children }) {
-  const [posts, setPosts] = useState(0);
+  const apiUrl = "http://localhost:3000";
+  const [posts, setPosts] = useState([]);
+  const fetchPosts = () => {
+    axios.get(`${apiUrl}/posts`).then((res) => {
+      setPosts(res.data.filteredPosts);
+    });
+  };
+
+  useEffect(fetchPosts, []);
+
+  const postsData = { posts };
   return (
-    <PostsContext.Provider
-      value={{
-        posts,
-        setPosts,
-      }}
-    >
-      {children}
-    </PostsContext.Provider>
+    <PostsContext.Provider value={postsData}>{children}</PostsContext.Provider>
   );
 }
 
-function useCount() {
-  const context = useContext(PostsContext);
-  return context;
+function usePosts() {
+  return useContext(PostsContext);
 }
 // Esportiamo il nostro provider ed il nostro hook
-export { PostsProvider, useCount };
+export { PostsProvider, usePosts };

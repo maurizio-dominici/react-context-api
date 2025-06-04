@@ -1,17 +1,8 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
+import { usePosts } from "../../context/PostsContext";
 import { Link } from "react-router-dom";
 
 export default function PostsList() {
-  const apiUrl = "http://localhost:3000";
-  const [posts, setPosts] = useState([]);
-
-  useEffect(() => {
-    axios.get(`${apiUrl}/posts`).then((res) => {
-      setPosts(res.data.filteredPosts);
-    });
-  }, []);
-
+  const { posts } = usePosts();
   const renderPosts = (post, i) => {
     // console.log(post);
 
